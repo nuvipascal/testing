@@ -1,0 +1,40 @@
+pipeline{
+ agent any
+ tools {
+	maven "3.8.4"
+	}
+	stages{
+	  stage('GitClone'){
+	  steps{
+		   sh "echo cloning the latest application version"
+		   git "https://github.com/nuvipascal/maven-web-application"
+		  }
+		}
+	    stage('TestBuild'){
+		steps{
+		sh "echo Running unittesting"
+		sh "echo unitTesting ok. creating packages"
+		sh "mvn clean package"
+		sh "echo Artifacts created"
+		  }
+		}
+		stage('codeQality'){
+		steps{
+		sh "echo "
+		sh "mvn sonar:sonar"
+		  }
+		}
+		stage('upLoadArtifacts'){
+		steps{
+		sh "echo uploadArtifacts into nexus"
+		sh "mvn deploy"
+		  }
+		}
+		stage('massage'){
+		steps{
+		  sh "echo CI job sucessful"
+		      }
+		    }
+				
+		  }
+		}
